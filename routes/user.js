@@ -48,21 +48,22 @@ router.route("/register").post(async (req, res) => {
     }
 })
 router.route("/login").post((req, res) => {
-    User.findOne({ userName: req.body.userName }).then((err, result) => {
+    User.findOne({ username: req.body.userName }).then((err, result) => {
         if (err) return res.status(500).json({ msg: err })
-        if (result === req.body.password) {
-            let token = jwt.sign({ userName: req.body.userName }, config.key, {
-                expiresIn: "24h"
-            })
-            res.json({
-                token: token,
-                msg: "successful"
-            })
-        } else {
-            res.status(403).json("password is incorrect")
-
-
-        }
+        if (!result) return res.status(403).json({ msg: "User not found" })
+        bcrypt.compare(req.body.password, result.password).then(isMatch => {
+            if (isMatch) {
+                let token = jwt.sign({ userName: req.body.userName }, config.key, {
+                    expiresIn: "24h"
+                })
+                res.json({
+                    token: token,
+                    msg: "successful"
+                })
+            } else {
+                res.status(403).json("password is incorrect")
+            }
+        })
     }
 
     )

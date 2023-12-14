@@ -20,10 +20,11 @@ const bodyParser = require("body-parser");
 
 port = 5000 || process.env.port
 const userRoutes = require("./routes/user");
-// app.use(express.json())
+
 app.use(bodyParser.json())
 app.use("/user", userRoutes);
-// mongoose.connect('mongodb://localhost:27017/mydb');
+
+
 const connection = mongoose.connection
 connection.once("open", () => {
     console.log("MongoDB connected successfully")
