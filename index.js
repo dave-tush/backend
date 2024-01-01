@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 // const json = require("json")
 const app = express()
-
+require('dotenv').config();
 
 
 //middleware for JSON parsing
@@ -28,11 +28,6 @@ app.use("/user", userRoutes);
 const connection = mongoose.connection
 connection.once("open", () => {
     console.log("MongoDB connected successfully")
-})
-
-
-app.get("/", (req, res) => {
-    res.send("Hello world")
 })
 app.listen(port, () => {
     console.log(`app running at ${port}`)
